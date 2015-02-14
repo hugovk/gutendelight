@@ -2,7 +2,7 @@
 
 Tweeting a mix of hip-hop (Rapper's Delight, Fight the Power, The Message, etc.) and classic literature from Project Gutenberg.
 
-See the Twitter bot in action at **[![](https://abs.twimg.com/favicons/favicon.ico)@gutendelight](https://twitter.com/gutendelight)** and some of the best at [![](http://favstar.fm/favicon.ico)http://favstar.fm/users/gutendelight](http://favstar.fm/users/gutendelight).
+See the Twitter bot in action at **[![](https://abs.twimg.com/favicons/favicon.ico)@gutendelight](https://twitter.com/gutendelight)** and some of the best at [![](http://favstar.fm/favicon.ico)Favstar](http://favstar.fm/users/gutendelight).
 
 ## Some examples
 
