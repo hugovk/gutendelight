@@ -26,6 +26,11 @@ def print_it(text):
     print(text.encode('utf-8'))
 
 
+def timestamp():
+    import datetime
+    print(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"))
+
+
 def load_text(infile):
     """Return a list of non-blank lines, ignore those beginning #"""
     with open(infile) as f:
@@ -78,7 +83,7 @@ def gutendelight(rapfile, inspec, cache):
         random_line = random.choice(rap)
         print(random_line)
 
-        last_word = rrandom_line.split()[-1]
+        last_word = random_line.split()[-1]
         print(last_word)
 
         rhymes = get_rhymes_from_wordnik(last_word)
@@ -187,6 +192,8 @@ def tweet_it(string, in_reply_to_status_id=None):
 
 
 if __name__ == "__main__":
+    timestamp()
+
     parser = argparse.ArgumentParser(
         description="Tweet a random line of rap coupled with"
                     "a rhyming line from Project Gutenberg.",
