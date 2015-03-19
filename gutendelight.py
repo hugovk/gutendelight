@@ -5,6 +5,7 @@ Tweet a random line of rap coupled with a rhyming line from Project Gutenberg.
 """
 from __future__ import print_function, unicode_literals
 import argparse
+import codecs
 import countsyl  # https://github.com/akkana/scripts/blob/master/countsyl
 import gutengrep
 import random
@@ -33,7 +34,7 @@ def timestamp():
 
 def load_text(infile):
     """Return a list of non-blank lines, ignore those beginning #"""
-    with open(infile) as f:
+    with codecs.open(infile, encoding='cp1252') as f:
         lines = f.read().splitlines()
     return list(line for line in lines if line and not line.startswith("#"))
 
@@ -44,6 +45,11 @@ def get_rhymes_from_wordnik(word):
                                        'http://api.wordnik.com/v4')
     wordApi = WordApi.WordApi(wordnik_client)
     rhymes = wordApi.getRelatedWords(word, relationshipTypes="rhyme")
+
+    if rhymes:
+        rhymes = rhymes[0].words
+        pprint(rhymes)
+
     return rhymes
 
 
@@ -91,9 +97,6 @@ def gutendelight(rapfile, inspec, cache):
             print("No rhymes found, try next line of rap")
             # TODO try canonical? or just continue and find a better one?
             continue
-
-        rhymes = rhymes[0].words
-        pprint(rhymes)
 
         random.shuffle(rhymes)
         pprint(rhymes)
@@ -226,10 +229,10 @@ if __name__ == "__main__":
 
     output = gutendelight(args.rap, args.inspec, args.cache)
     print("="*80)
-    print(output)
+    print_it(output)
     print("="*80)
 
-    print("Tweet this:\n" + output)
+    print_it("Tweet this:\n" + output)
     try:
         tweet_it(output)
 
