@@ -43,14 +43,30 @@ def get_rhymes_from_wordnik(word):
     global data
     wordnik_client = swagger.ApiClient(data['wordnik_api_key'],
                                        'http://api.wordnik.com/v4')
-    wordApi = WordApi.WordApi(wordnik_client)
-    rhymes = wordApi.getRelatedWords(word, relationshipTypes="rhyme")
+    word_api = WordApi.WordApi(wordnik_client)
+    rhymes = word_api.getRelatedWords(word, relationshipTypes="rhyme")
 
     if rhymes:
         rhymes = rhymes[0].words
-        pprint(rhymes)
+        # pprint(rhymes)
 
     return rhymes
+
+
+def get_rhymes_from_rhymebrain(word):
+    import json
+    import requests
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    url = "http://rhymebrain.com/talk?"
+
+    # def rhymes_with(word):
+    query = "{0}function=getRhymes&word={1}".format(url, word)
+    print_it(query)
+    r = requests.get(query)
+    data = r.json()
+    words = [word['word'] for word in data if word['score'] >= 300]
+    return words
 
 
 def get_matches_from_project_gutenberg(word, sentences):
@@ -60,10 +76,9 @@ def get_matches_from_project_gutenberg(word, sentences):
     flags = re.IGNORECASE  # TODO try with case first? nah...
 #     regex = "\b" + word + "\b\W*$"  # word followed by non-letters and $
     regex = word  # word followed by non-letters and $
-    regex = word + "\b\W*$"  # word followed by non-letters and $
+    regex = word + r"\b\W*$"  # word followed by non-letters and $
     regex = r"\b" + word + r"\b\W*$"  # word followed by non-letters and $
     print(regex)
-    pprint(regex)
     sentences = gutengrep.find_matching_sentences(
         regex, sentences,
         flags=flags)
@@ -87,24 +102,25 @@ def gutendelight(rapfile, inspec, cache):
     while(True):
 
         random_line = random.choice(rap)
-        print(random_line)
+#         print_it(random_line)
 
         last_word = random_line.split()[-1]
-        print(last_word)
+#         print(last_word)
 
-        rhymes = get_rhymes_from_wordnik(last_word)
+        # rhymes = get_rhymes_from_wordnik(last_word)
+        rhymes = get_rhymes_from_rhymebrain(last_word)
         if not rhymes:
             print("No rhymes found, try next line of rap")
             # TODO try canonical? or just continue and find a better one?
             continue
 
         random.shuffle(rhymes)
-        pprint(rhymes)
+#         pprint(rhymes)
 
         random_line_syllables = number_of_syllables(random_line)
 
         for rhyme in rhymes:
-            print(rhyme)
+            # print(rhyme)
 
             # Find rhyming sentences from Project Gutenberg
             sentences = get_matches_from_project_gutenberg(rhyme,
@@ -113,24 +129,26 @@ def gutendelight(rapfile, inspec, cache):
                 print("No matches found, try next rhyme")
                 continue
 
-            pprint(sentences)
+            sentences = gutengrep.correct_those(sentences)
+            # pprint(sentences)
+
             closest_diff = 999
             best = None
             for sentence in sentences:
                 sentence = sentence.replace("\r\n", " ")  # Remove newlines
                 sentence = " ".join(sentence.split())  # Remove dupe spaces
                 output = random_line + "\n\n" + sentence
-                print("*"*80)
-                print_it(output)
-                print(len(output))
-                if len(output) > 140:
+                # print("*"*80)
+                # print_it(output)
+                # print(len(output))
+                if len(output) > 280:
                     print("Too long, try next sentence")
                     continue
                 else:
                     # Pick one that's about the same number of syllables
                     syllables = number_of_syllables(sentence)
                     diff = abs(random_line_syllables - syllables)
-                    print(diff, random_line_syllables, syllables)
+                    # print(diff, random_line_syllables, syllables)
                     if diff < closest_diff:
                         closest_diff = diff
                         best = output
@@ -148,15 +166,16 @@ def load_yaml(filename):
     access_token_secret: TODO_ENTER_YOURS
     wordnik_api_key: TODO_ENTER_YOURS
     """
-    f = open(filename)
-    data = yaml.safe_load(f)
-    f.close()
-    if not data.viewkeys() >= {
-            'access_token', 'access_token_secret',
-            'consumer_key', 'consumer_secret'}:
+    with open(filename) as f:
+        data = yaml.safe_load(f)
+
+    keys = data.viewkeys() if sys.version_info.major == 2 else data.keys()
+    if not keys >= {
+        'access_token', 'access_token_secret',
+        'consumer_key', 'consumer_secret'
+    }:
         sys.exit("Twitter credentials missing from YAML: " + filename)
-    if not data.viewkeys() >= {
-            'wordnik_api_key'}:
+    if not keys >= {'wordnik_api_key'}:
         sys.exit("Wordnik credentials missing from YAML: " + filename)
     return data
 
