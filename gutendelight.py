@@ -55,7 +55,7 @@ def get_rhymes_from_rhymebrain(word):
     url = "http://rhymebrain.com/talk?"
 
     # def rhymes_with(word):
-    query = "{}function=getRhymes&word={}".format(url, word)
+    query = f"{url}function=getRhymes&word={word}"
     print_it(query)
     r = requests.get(query)
     data = r.json()

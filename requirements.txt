@@ -1,4 +1,4 @@
 PyYAML
 requests
 twitter
-wordnik
+wordnik-py3
