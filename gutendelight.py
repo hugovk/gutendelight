@@ -3,8 +3,6 @@
 """
 Tweet a random line of rap coupled with a rhyming line from Project Gutenberg.
 """
-from __future__ import print_function, unicode_literals
-
 import argparse
 import codecs
 import logging
@@ -22,11 +20,6 @@ import countsyl  # https://github.com/akkana/scripts/blob/master/countsyl
 import gutengrep
 
 TWITTER = None
-
-
-# Windows cmd.exe cannot do Unicode so encode first
-def print_it(text):
-    print(text.encode("utf-8"))
 
 
 def timestamp():
@@ -62,7 +55,7 @@ def get_rhymes_from_rhymebrain(word):
     url = "http://rhymebrain.com/talk?"
 
     # def rhymes_with(word):
-    query = "{0}function=getRhymes&word={1}".format(url, word)
+    query = "{}function=getRhymes&word={}".format(url, word)
     print_it(query)
     r = requests.get(query)
     data = r.json()
@@ -167,8 +160,7 @@ def load_yaml(filename):
     with open(filename) as f:
         data = yaml.safe_load(f)
 
-    keys = data.viewkeys() if sys.version_info.major == 2 else data.keys()
-    if not keys >= {
+    if not data.keys() >= {
         "access_token",
         "access_token_secret",
         "consumer_key",

@@ -1,7 +1,7 @@
 # @gutendelight
 
 [![Build Status](https://travis-ci.org/hugovk/python-ci-static-analysis.svg?branch=master)](https://travis-ci.org/hugovk/python-ci-static-analysis)
-[![Python: 2.7, 3.4+](https://img.shields.io/badge/python-2.7,_3.4+-blue.svg)](https://www.python.org/downloads/)
+[![Python: 3.4+](https://img.shields.io/badge/python-3.4+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 Tweeting a mix of hip-hop (Rapper's Delight, Fight the Power, The Message, etc.) and classic literature from Project Gutenberg.
