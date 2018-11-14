@@ -56,7 +56,7 @@ def get_rhymes_from_rhymebrain(word):
 
     # def rhymes_with(word):
     query = f"{url}function=getRhymes&word={word}"
-    print_it(query)
+    print(query)
     r = requests.get(query)
     data = r.json()
     words = [word["word"] for word in data if word["score"] >= 300]
@@ -68,7 +68,7 @@ def get_matches_from_project_gutenberg(word, sentences):
 
     # Filter
     flags = re.IGNORECASE  # TODO try with case first? nah...
-    #     regex = "\b" + word + "\b\W*$"  # word followed by non-letters and $
+    # regex = "\b" + word + "\b\W*$"  # word followed by non-letters and $
     regex = word  # word followed by non-letters and $
     regex = word + r"\b\W*$"  # word followed by non-letters and $
     regex = r"\b" + word + r"\b\W*$"  # word followed by non-letters and $
@@ -86,7 +86,7 @@ def number_of_syllables(sentence):
 
 def gutendelight(rapfile, inspec, cache):
     rap = load_text(rapfile)
-    #     pprint(rap)
+    # pprint(rap)
 
     # Prep PG
     all_sentences = gutengrep.prepare(inspec, cache)
@@ -94,10 +94,10 @@ def gutendelight(rapfile, inspec, cache):
     while True:
 
         random_line = random.choice(rap)
-        #         print_it(random_line)
+        # print(random_line)
 
         last_word = random_line.split()[-1]
-        #         print(last_word)
+        # print(last_word)
 
         # rhymes = get_rhymes_from_wordnik(last_word)
         rhymes = get_rhymes_from_rhymebrain(last_word)
@@ -107,7 +107,7 @@ def gutendelight(rapfile, inspec, cache):
             continue
 
         random.shuffle(rhymes)
-        #         pprint(rhymes)
+        # pprint(rhymes)
 
         random_line_syllables = number_of_syllables(random_line)
 
@@ -130,7 +130,7 @@ def gutendelight(rapfile, inspec, cache):
                 sentence = " ".join(sentence.split())  # Remove dupe spaces
                 output = random_line + "\n\n" + sentence
                 # print("*"*80)
-                # print_it(output)
+                # print(output)
                 # print(len(output))
                 if len(output) > 280:
                     print("Too long, try next sentence")
@@ -192,7 +192,7 @@ def tweet_it(string, in_reply_to_status_id=None):
             )
         )
 
-    print_it("TWEETING THIS: " + string)
+    print("TWEETING THIS: " + string)
 
     if args.test:
         print("(Test mode, not actually tweeting)")
@@ -260,10 +260,10 @@ if __name__ == "__main__":
 
     output = gutendelight(args.rap, args.inspec, args.cache)
     print("=" * 80)
-    print_it(output)
+    print(output)
     print("=" * 80)
 
-    print_it("Tweet this:\n" + output)
+    print("Tweet this:\n" + output)
     try:
         tweet_it(output)
 
