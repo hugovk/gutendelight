@@ -167,7 +167,7 @@ def load_yaml(filename):
         "consumer_secret",
     }:
         sys.exit("Twitter credentials missing from YAML: " + filename)
-    if not keys >= {"wordnik_api_key"}:
+    if not data.keys() >= {"wordnik_api_key"}:
         sys.exit("Wordnik credentials missing from YAML: " + filename)
     return data
 
